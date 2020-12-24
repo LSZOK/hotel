@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.BaggageDepositMapper">
+    
+    <resultMap type="BaggageDeposit" id="BaggageDepositResult">
+        <result property="baggageId"    column="baggage_id"    />
+        <result property="clientName"    column="client_name"    />
+        <result property="clientId"    column="client_id"    />
+        <result property="num"    column="num"    />
+        <result property="operator"    column="operator"    />
+        <result property="pictures"    column="pictures"    />
+        <result property="status"    column="status"    />
+        <result property="detail"    column="detail"    />
+        <result property="price"    column="price"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="takeTime"    column="take_time"    />
+    </resultMap>
+
+    <sql id="selectBaggageDepositVo">
+        select baggage_id, client_name, client_id, num, operator, pictures, add_time, take_time,status,detail,price from baggage_deposit
+    </sql>
+
+    <select id="selectBaggageDepositList" parameterType="BaggageDeposit" resultMap="BaggageDepositResult">
+        <include refid="selectBaggageDepositVo"/>
+        <where>
+            <if test="clientName != null  and clientName != ''"> and client_name like concat('%', #{clientName}, '%')</if>
+            <if test="clientId != null  and clientId != ''"> and client_id = #{clientId}</if>
+            <if test="num != null "> and num = #{num}</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+            <if test="pictures != null  and pictures != ''"> and pictures = #{pictures}</if>
+            <if test="addTime != null  and addTime != ''"> and add_time = #{addTime}</if>
+            <if test="detail != null  and detail != ''"> and detail = #{detail}</if>
+            <if test="price != null  and price != ''"> and price = #{price}</if>
+            <if test="takeTime != null  and takeTime != ''"> and take_time = #{takeTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaggageDepositById" parameterType="String" resultMap="BaggageDepositResult">
+        <include refid="selectBaggageDepositVo"/>
+        where baggage_id = #{baggageId}
+    </select>
+        
+    <insert id="insertBaggageDeposit" parameterType="BaggageDeposit">
+        insert into baggage_deposit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="baggageId != null">baggage_id,</if>
+            <if test="clientName != null">client_name,</if>
+            <if test="clientId != null">client_id,</if>
+            <if test="num != null">num,</if>
+            <if test="operator != null">operator,</if>
+            <if test="pictures != null">pictures,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="takeTime != null">take_time,</if>
+            <if test="status != null">status,</if>
+            <if test="price != null">price,</if>
+            <if test="detail != null">detail,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="baggageId != null">#{baggageId},</if>
+            <if test="clientName != null">#{clientName},</if>
+            <if test="clientId != null">#{clientId},</if>
+            <if test="num != null">#{num},</if>
+            <if test="operator != null">#{operator},</if>
+            <if test="pictures != null">#{pictures},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="takeTime != null">#{takeTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="price != null">#{price},</if>
+            <if test="detail != null">#{detail},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaggageDeposit" parameterType="BaggageDeposit">
+        update baggage_deposit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientName != null">client_name = #{clientName},</if>
+            <if test="clientId != null">client_id = #{clientId},</if>
+            <if test="num != null">num = #{num},</if>
+            <if test="operator != null">operator = #{operator},</if>
+            <if test="pictures != null">pictures = #{pictures},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="takeTime != null">take_time = #{takeTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="status != price">price = #{price},</if>
+            <if test="detail != null">detail = #{detail},</if>
+        </trim>
+        where baggage_id = #{baggageId}
+    </update>
+
+    <delete id="deleteBaggageDepositById" parameterType="String">
+        delete from baggage_deposit where baggage_id = #{baggageId}
+    </delete>
+
+    <delete id="deleteBaggageDepositByIds" parameterType="String">
+        delete from baggage_deposit where baggage_id in 
+        <foreach item="baggageId" collection="array" open="(" separator="," close=")">
+            #{baggageId}
+        </foreach>
+    </delete>
+    
+</mapper>

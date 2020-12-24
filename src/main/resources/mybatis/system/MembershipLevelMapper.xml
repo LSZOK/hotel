@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.MembershipLevelMapper">
+    
+    <resultMap type="MembershipLevel" id="MembershipLevelResult">
+        <result property="id"    column="id"    />
+        <result property="membershipName"    column="membership_name"    />
+        <result property="discount"    column="discount"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMembershipLevelVo">
+        select id, membership_name, discount, add_time from membership_level
+    </sql>
+
+    <select id="selectMembershipLevelList" parameterType="MembershipLevel" resultMap="MembershipLevelResult">
+        <include refid="selectMembershipLevelVo"/>
+        <where>  
+            <if test="membershipName != null  and membershipName != ''"> and membership_name like concat('%', #{membershipName}, '%')</if>
+            <if test="discount !=0.0 "> and discount = #{discount}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMembershipLevelById" parameterType="Long" resultMap="MembershipLevelResult">
+        <include refid="selectMembershipLevelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMembershipLevel" parameterType="MembershipLevel" useGeneratedKeys="true" keyProperty="id">
+        insert into membership_level
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="membershipName != null">membership_name,</if>
+            <if test="discount != null">discount,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="membershipName != null">#{membershipName},</if>
+            <if test="discount != null">#{discount},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMembershipLevel" parameterType="MembershipLevel">
+        update membership_level
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="membershipName != null">membership_name = #{membershipName},</if>
+            <if test="discount != null">discount = #{discount},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMembershipLevelById" parameterType="Long">
+        delete from membership_level where id = #{id}
+    </delete>
+
+    <delete id="deleteMembershipLevelByIds" parameterType="String">
+        delete from membership_level where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

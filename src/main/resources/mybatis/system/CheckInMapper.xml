@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.CheckInMapper">
+    
+    <resultMap type="CheckIn" id="CheckInResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="roomCode"    column="room_code"    />
+        <result property="roomNum"    column="room_num"    />
+        <result property="username"    column="username"    />
+        <result property="sex"    column="sex"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="phone"    column="phone"    />
+        <result property="remark"    column="remark"    />
+        <result property="operator"    column="operator"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectCheckInVo">
+        select id, order_id,room_code, room_num, username, sex, id_card, phone, remark, operator, add_time from check_in
+    </sql>
+
+
+
+    <select id="selectCheckInList" parameterType="CheckIn" resultMap="CheckInResult">
+        <include refid="selectCheckInVo"/>
+        <where>  
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="roomCode != null  and roomCode != ''"> and room_code = #{roomCode}</if>
+            <if test="roomNum != null "> and room_num = #{roomNum}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="idCard != null  and idCard != ''"> and id_card = #{idCard}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectCheckInById" parameterType="Long" resultMap="CheckInResult">
+        <include refid="selectCheckInVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCheckIn" parameterType="CheckIn" useGeneratedKeys="true" keyProperty="id">
+        insert into check_in
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="roomCode != null">room_code,</if>
+            <if test="roomNum != null">room_num,</if>
+            <if test="username != null">username,</if>
+            <if test="sex != null">sex,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="phone != null">phone,</if>
+            <if test="remark != null">remark,</if>
+            <if test="operator != null">operator,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="roomCode != null">#{roomCode},</if>
+            <if test="roomNum != null">#{roomNum},</if>
+            <if test="username != null">#{username},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="operator != null">#{operator},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCheckIn" parameterType="CheckIn">
+        update check_in
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="roomCode != null">room_code = #{roomCode},</if>
+            <if test="roomNum != null">room_num = #{roomNum},</if>
+            <if test="username != null">username = #{username},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="operator != null">operator = #{operator},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCheckInById" parameterType="Long">
+        delete from check_in where id = #{id}
+    </delete>
+
+    <delete id="deleteCheckInByIds" parameterType="String">
+        delete from check_in where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.DishesInfoMapper">
+    
+    <resultMap type="DishesInfo" id="DishesInfoResult">
+        <result property="id"    column="id"    />
+        <result property="dishesId"    column="dishes_id"    />
+        <result property="dishesName"    column="dishes_name"    />
+        <result property="dishesType"    column="dishes_type"    />
+        <result property="picture"    column="picture"    />
+        <result property="price"    column="price"    />
+        <result property="description"    column="description"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+    <resultMap id="DishesTypeResult" type="DishesType">
+        <result property="id" column="id"></result>
+        <result property="dishesTypeName" column="dishes_type_name"/>
+        <result property="addTime" column="add_time"/>
+    </resultMap>
+
+    <sql id="selectDishesInfoVo" >
+        select id, dishes_id,dishes_name, dishes_type, picture, price, description, add_time from dishes_info
+    </sql>
+    <sql id="selectDishesTypeVo" >
+        select id, dishes_type_name, add_time from dishes_type
+    </sql>
+
+    <select id="selectDishesTypeList" resultMap="DishesTypeResult">
+        <include refid="selectDishesTypeVo"></include>
+    </select>
+    <select id="selectDishesInfoList" parameterType="DishesInfo" resultMap="DishesInfoResult">
+        <include refid="selectDishesInfoVo"/>
+        <where>
+            <if test="dishesName != null "> and dishes_name = #{dishesName}</if>
+            <if test="dishesType != null "> and dishes_type = #{dishesType}</if>
+            <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(add_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(add_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectDishesInfoById" parameterType="Long" resultMap="DishesInfoResult">
+        <include refid="selectDishesInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDishesInfo" parameterType="DishesInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into dishes_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="dishesId != null">dishes_id,</if>
+            <if test="dishesName != null">dishes_name,</if>
+            <if test="dishesType != null">dishes_type,</if>
+            <if test="picture != null">picture,</if>
+            <if test="price != null">price,</if>
+            <if test="description != null">description,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dishesId != null">#{dishesId},</if>
+            <if test="dishesName != null">#{dishesName},</if>
+            <if test="dishesType != null">#{dishesType},</if>
+            <if test="picture != null">#{picture},</if>
+            <if test="price != null">#{price},</if>
+            <if test="description != null">#{description},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDishesInfo" parameterType="DishesInfo">
+        update dishes_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dishesId != null">dishes_id = #{dishesId},</if>
+            <if test="dishesName != null">dishes_name = #{dishesName},</if>
+            <if test="dishesType != null">dishes_type = #{dishesType},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDishesInfoById" parameterType="Long">
+        delete from dishes_info where id = #{id}
+    </delete>
+
+    <delete id="deleteDishesInfoByIds" parameterType="String">
+        delete from dishes_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

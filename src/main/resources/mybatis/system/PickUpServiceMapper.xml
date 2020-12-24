@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.PickUpServiceMapper">
+    
+    <resultMap type="PickUpService" id="PickUpServiceResult">
+        <result property="pickUpId"    column="pick_up_id"    />
+        <result property="pickUpType"    column="pick_up_type"    />
+        <result property="pickUpTime"    column="pick_up_time"    />
+        <result property="flightNumber"    column="flight_number"    />
+        <result property="arriveTime"    column="arrive_time"    />
+        <result property="persionNum"    column="persion_num"    />
+        <result property="clientId"    column="client_id"    />
+        <result property="clientName"    column="client_name"    />
+        <result property="phone"    column="phone"    />
+        <result property="remark"    column="remark"    />
+        <result property="operator"    column="operator"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectPickUpServiceVo">
+        select pick_up_id, pick_up_type, pick_up_time, flight_number, arrive_time, persion_num, client_id, client_name, phone, remark, operator, add_time,status from pick_up_service
+    </sql>
+
+    <select id="selectPickUpServiceList" parameterType="PickUpService" resultMap="PickUpServiceResult">
+        <include refid="selectPickUpServiceVo"/>
+        <where>  
+            <if test="pickUpType != null  and pickUpType != ''"> and pick_up_type = #{pickUpType}</if>
+            <if test="pickUpTime != null  and pickUpTime != ''"> and pick_up_time = #{pickUpTime}</if>
+            <if test="flightNumber != null  and flightNumber != ''"> and flight_number = #{flightNumber}</if>
+            <if test="arriveTime != null  and arriveTime != ''"> and arrive_time = #{arriveTime}</if>
+            <if test="persionNum != null  and persionNum != ''"> and persion_num = #{persionNum}</if>
+            <if test="clientId != null  and clientId != ''"> and client_id = #{clientId}</if>
+            <if test="clientName != null  and clientName != ''"> and client_name like concat('%', #{clientName}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+            <if test="addTime != null  and addTime != ''"> and add_time = #{addTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectPickUpServiceById" parameterType="String" resultMap="PickUpServiceResult">
+        <include refid="selectPickUpServiceVo"/>
+        where pick_up_id = #{pickUpId}
+    </select>
+        
+    <insert id="insertPickUpService" parameterType="PickUpService">
+        insert into pick_up_service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pickUpId != null">pick_up_id,</if>
+            <if test="pickUpType != null">pick_up_type,</if>
+            <if test="pickUpTime != null">pick_up_time,</if>
+            <if test="flightNumber != null">flight_number,</if>
+            <if test="arriveTime != null">arrive_time,</if>
+            <if test="persionNum != null">persion_num,</if>
+            <if test="clientId != null">client_id,</if>
+            <if test="clientName != null">client_name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="remark != null">remark,</if>
+            <if test="operator != null">operator,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pickUpId != null">#{pickUpId},</if>
+            <if test="pickUpType != null">#{pickUpType},</if>
+            <if test="pickUpTime != null">#{pickUpTime},</if>
+            <if test="flightNumber != null">#{flightNumber},</if>
+            <if test="arriveTime != null">#{arriveTime},</if>
+            <if test="persionNum != null">#{persionNum},</if>
+            <if test="clientId != null">#{clientId},</if>
+            <if test="clientName != null">#{clientName},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="operator != null">#{operator},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePickUpService" parameterType="PickUpService">
+        update pick_up_service
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pickUpType != null">pick_up_type = #{pickUpType},</if>
+            <if test="pickUpTime != null">pick_up_time = #{pickUpTime},</if>
+            <if test="flightNumber != null">flight_number = #{flightNumber},</if>
+            <if test="arriveTime != null">arrive_time = #{arriveTime},</if>
+            <if test="persionNum != null">persion_num = #{persionNum},</if>
+            <if test="clientId != null">client_id = #{clientId},</if>
+            <if test="clientName != null">client_name = #{clientName},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="operator != null">operator = #{operator},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where pick_up_id = #{pickUpId}
+    </update>
+
+    <delete id="deletePickUpServiceById" parameterType="String">
+        delete from pick_up_service where pick_up_id = #{pickUpId}
+    </delete>
+
+    <delete id="deletePickUpServiceByIds" parameterType="String">
+        delete from pick_up_service where pick_up_id in 
+        <foreach item="pickUpId" collection="array" open="(" separator="," close=")">
+            #{pickUpId}
+        </foreach>
+    </delete>
+    
+</mapper>

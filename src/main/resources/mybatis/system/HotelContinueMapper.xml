@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.HotelContinueMapper">
+
+    <resultMap type="HotelContinue" id="HotelContinueResult">
+        <result property="continueId"    column="continue_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="clientId"    column="client_id"    />
+        <result property="roomCode"    column="room_code"    />
+        <result property="price"    column="price"    />
+        <result property="total"    column="total"    />
+        <result property="roomNum"    column="room_num"    />
+        <result property="roomType"    column="room_type"    />
+        <result property="liveTime"    column="live_time"    />
+        <result property="continueTime"    column="continue_time"    />
+        <result property="outTime"    column="out_time"    />
+        <result property="continueName"    column="continue_name"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="operator"    column="operator"    />
+    </resultMap>
+
+    <sql id="selectHotelContinueVo">
+        select continue_id, order_id, client_id, room_code, price, total, room_num, room_type, live_time, continue_time, out_time, continue_name, add_time, operator from hotel_continue
+    </sql>
+
+    <select id="selectHotelContinueList" parameterType="HotelContinue" resultMap="HotelContinueResult">
+        <include refid="selectHotelContinueVo"/>
+        <where>
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="clientId != null  and clientId != ''"> and client_id = #{clientId}</if>
+            <if test="roomCode != null  and roomCode != ''"> and room_code = #{roomCode}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="total != null "> and total = #{total}</if>
+            <if test="roomNum != null "> and room_num = #{roomNum}</if>
+            <if test="roomType != null "> and room_type = #{roomType}</if>
+            <if test="liveTime != null "> and live_time = #{liveTime}</if>
+            <if test="continueTime != null "> and continue_time = #{continueTime}</if>
+            <if test="outTime != null "> and out_time = #{outTime}</if>
+            <if test="continueName != null  and continueName != ''"> and continue_name like concat('%', #{continueName}, '%')</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+        </where>
+    </select>
+
+    <select id="selectHotelContinueById" parameterType="String" resultMap="HotelContinueResult">
+        <include refid="selectHotelContinueVo"/>
+        where continue_id = #{continueId}
+    </select>
+
+    <insert id="insertHotelContinue" parameterType="HotelContinue">
+        insert into hotel_continue
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="continueId != null">continue_id,</if>
+            <if test="orderId != null and orderId != ''">order_id,</if>
+            <if test="clientId != null">client_id,</if>
+            <if test="roomCode != null">room_code,</if>
+            <if test="price != null">price,</if>
+            <if test="total != null">total,</if>
+            <if test="roomNum != null">room_num,</if>
+            <if test="roomType != null">room_type,</if>
+            <if test="liveTime != null">live_time,</if>
+            <if test="continueTime != null">continue_time,</if>
+            <if test="outTime != null">out_time,</if>
+            <if test="continueName != null">continue_name,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="operator != null">operator,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="continueId != null">#{continueId},</if>
+            <if test="orderId != null and orderId != ''">#{orderId},</if>
+            <if test="clientId != null">#{clientId},</if>
+            <if test="roomCode != null">#{roomCode},</if>
+            <if test="price != null">#{price},</if>
+            <if test="total != null">#{total},</if>
+            <if test="roomNum != null">#{roomNum},</if>
+            <if test="roomType != null">#{roomType},</if>
+            <if test="liveTime != null">#{liveTime},</if>
+            <if test="continueTime != null">#{continueTime},</if>
+            <if test="outTime != null">#{outTime},</if>
+            <if test="continueName != null">#{continueName},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="operator != null">#{operator},</if>
+        </trim>
+    </insert>
+
+    <update id="updateHotelContinue" parameterType="HotelContinue">
+        update hotel_continue
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null and orderId != ''">order_id = #{orderId},</if>
+            <if test="clientId != null">client_id = #{clientId},</if>
+            <if test="roomCode != null">room_code = #{roomCode},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="total != null">total = #{total},</if>
+            <if test="roomNum != null">room_num = #{roomNum},</if>
+            <if test="roomType != null">room_type = #{roomType},</if>
+            <if test="liveTime != null">live_time = #{liveTime},</if>
+            <if test="continueTime != null">continue_time = #{continueTime},</if>
+            <if test="outTime != null">out_time = #{outTime},</if>
+            <if test="continueName != null">continue_name = #{continueName},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="operator != null">operator = #{operator},</if>
+        </trim>
+        where continue_id = #{continueId}
+    </update>
+
+    <delete id="deleteHotelContinueById" parameterType="String">
+        delete from hotel_continue where continue_id = #{continueId}
+    </delete>
+
+    <delete id="deleteHotelContinueByIds" parameterType="String">
+        delete from hotel_continue where continue_id in
+        <foreach item="continueId" collection="array" open="(" separator="," close=")">
+            #{continueId}
+        </foreach>
+    </delete>
+
+</mapper>

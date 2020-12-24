@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.HotelOrderMapper">
+    
+    <resultMap type="HotelOrder" id="HotelOrderResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="clientId"    column="client_id"    />
+        <result property="roomCode"    column="room_code"    />
+        <result property="roomNum"    column="room_num"    />
+        <result property="roomType"    column="room_type"    />
+        <result property="status"    column="status"    />
+        <result property="price"    column="price"    />
+        <result property="otherCost"    column="other_cost"    />
+        <result property="bedType"    column="bed_type"    />
+        <result property="liveTime"    column="live_time"    />
+        <result property="outTime"    column="out_time"    />
+        <result property="addTime"    column="add_time"    />
+        <association property="client"    column="client_id" javaType="Client" resultMap="clientResult" />
+        <association property="roomTypeInfo"    column="room_type" javaType="RoomType" resultMap="RoomTypeResult" />
+    </resultMap>
+
+    <resultMap id="clientResult" type="Client">
+        <id     property="clientId"   column="client_id"     />
+        <result     property="openId"   column="open_id"     />
+        <result property="clientName" column="client_name"   />
+        <result property="sex" column="sex"   />
+        <result property="phone" column="phone"   />
+        <result property="roomNum"   column="room_num"      />
+        <result property="totalCost"   column="total_cost" />
+        <result property="menberLevel"   column="menber_level" />
+        <result property="idCard"   column="id_card" />
+
+    </resultMap>
+    <resultMap type="RoomType" id="RoomTypeResult">
+        <result property="id"    column="id"    />
+        <result property="roomTypeName"    column="room_type_name"    />
+
+    </resultMap>
+
+    <sql id="selectHotelOrderVo">
+        select o.order_id, o.client_id, o.room_code, o.room_num, o.room_type, o.status, o.price, o.other_cost, o.bed_type, o.live_time, o.out_time, o.add_time,
+        c.client_id,c.client_name,c.sex,c.phone,c.room_num,c.total_cost,c.menber_level,c.open_id,rt.id,rt.room_type_name
+        from hotel_order o
+        left join room_type rt on o.room_type=rt.id
+        left join client c on o.client_id=c.client_id
+
+    </sql>
+
+
+    <select id="selectHotelOrderList" parameterType="HotelOrder" resultMap="HotelOrderResult">
+        <include refid="selectHotelOrderVo"/>
+        <where>  
+            <if test="clientId != null  and clientId != ''"> and c.client_id = #{clientId}</if>
+            <if test="roomCode != null  and roomCode != ''"> and room_code = #{roomCode}</if>
+            <if test="roomNum != null "> and room_num = #{roomNum}</if>
+            <if test="roomType != null "> and room_type = #{roomType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="otherCost != null "> and other_cost = #{otherCost}</if>
+            <if test="bedType != null  and bedType != ''"> and bed_type = #{bedType}</if>
+            <if test="liveTime != null "> and live_time = #{liveTime}</if>
+            <if test="outTime != null "> and out_time = #{outTime}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="openId != null and openId != ''"><!-- 结状态检索 -->
+                and c.open_id=#{openId}
+            </if>
+            <if test="beginStatus != null and beginStatus != ''"><!-- 开始状态检索 -->
+                and o.status <![CDATA[>=]]> #{beginStatus}
+            </if>
+            <if test="beginStatus != null and beginStatus != ''or status==0"><!-- 开始状态检索 -->
+                and o.status <![CDATA[<=]]> #{endStatus}
+            </if>
+        </where>
+    </select>
+
+
+
+    <select id="selectHotelOrderByStatus" parameterType="HotelOrder" resultMap="HotelOrderResult">
+        <include refid="selectHotelOrderVo"/>
+        <where>
+            <if test="clientId != null  and clientId != ''"> and c.client_id = #{clientId}</if>
+            <if test="roomCode != null  and roomCode != ''"> and room_code = #{roomCode}</if>
+            <if test="roomNum != null "> and room_num = #{roomNum}</if>
+            <if test="roomType != null "> and room_type = #{roomType}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="otherCost != null "> and other_cost = #{otherCost}</if>
+            <if test="bedType != null  and bedType != ''"> and bed_type = #{bedType}</if>
+            <if test="liveTime != null "> and live_time = #{liveTime}</if>
+            <if test="outTime != null "> and out_time = #{outTime}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="openId != null and openId != ''"><!-- 结状态检索 -->
+                and c.open_id=#{openId}
+            </if>
+            <if test="beginStatus != null and beginStatus != ''"><!-- 开始状态检索 -->
+                and o.status <![CDATA[>=]]> #{beginStatus}
+            </if>
+            <if test="beginStatus != null and beginStatus != ''or status==0"><!-- 开始状态检索 -->
+                and o.status <![CDATA[<=]]> #{beginStatus}
+            </if>
+        </where>
+    </select>
+
+
+
+
+    <select id="selectHotelOrderById" parameterType="String" resultMap="HotelOrderResult">
+        <include refid="selectHotelOrderVo"/>
+        where order_id = #{orderId}
+    </select>
+
+
+        
+    <insert id="insertHotelOrder" parameterType="HotelOrder">
+        insert into hotel_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="clientId != null">client_id,</if>
+            <if test="roomCode != null">room_code,</if>
+            <if test="roomNum != null">room_num,</if>
+            <if test="roomType != null">room_type,</if>
+            <if test="status != null">status,</if>
+            <if test="price != null">price,</if>
+            <if test="otherCost != null">other_cost,</if>
+            <if test="bedType != null">bed_type,</if>
+            <if test="liveTime != null">live_time,</if>
+            <if test="outTime != null">out_time,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="clientId != null">#{clientId},</if>
+            <if test="roomCode != null">#{roomCode},</if>
+            <if test="roomNum != null">#{roomNum},</if>
+            <if test="roomType != null">#{roomType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="price != null">#{price},</if>
+            <if test="otherCost != null">#{otherCost},</if>
+            <if test="bedType != null">#{bedType},</if>
+            <if test="liveTime != null">#{liveTime},</if>
+            <if test="outTime != null">#{outTime},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHotelOrder" parameterType="HotelOrder">
+        update hotel_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientId != null">client_id = #{clientId},</if>
+            <if test="roomCode != null">room_code = #{roomCode},</if>
+            <if test="roomNum != null">room_num = #{roomNum},</if>
+            <if test="roomType != null">room_type = #{roomType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="otherCost != null">other_cost = #{otherCost},</if>
+            <if test="bedType != null">bed_type = #{bedType},</if>
+            <if test="liveTime != null">live_time = #{liveTime},</if>
+            <if test="outTime != null">out_time = #{outTime},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where order_id = #{orderId}
+    </update>
+
+    <delete id="deleteHotelOrderById" parameterType="String">
+        delete from hotel_order where order_id = #{orderId}
+    </delete>
+
+    <delete id="deleteHotelOrderByIds" parameterType="String">
+        delete from hotel_order where order_id in 
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+    
+</mapper>

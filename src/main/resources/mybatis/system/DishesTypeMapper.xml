@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.DishesTypeMapper">
+    
+    <resultMap type="DishesType" id="DishesTypeResult">
+        <result property="id"    column="id"    />
+        <result property="dishesTypeName"    column="dishes_type_name"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectDishesTypeVo">
+        select id, dishes_type_name, add_time from dishes_type
+    </sql>
+
+    <select id="selectDishesTypeList" parameterType="DishesType" resultMap="DishesTypeResult">
+        <include refid="selectDishesTypeVo"/>
+        <where>  
+            <if test="dishesTypeName != null  and dishesTypeName != ''"> and dishes_type_name like concat('%', #{dishesTypeName}, '%')</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(add_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(add_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectDishesTypeById" parameterType="Long" resultMap="DishesTypeResult">
+        <include refid="selectDishesTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDishesType" parameterType="DishesType" useGeneratedKeys="true" keyProperty="id">
+        insert into dishes_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dishesTypeName != null">dishes_type_name,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dishesTypeName != null">#{dishesTypeName},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDishesType" parameterType="DishesType">
+        update dishes_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dishesTypeName != null">dishes_type_name = #{dishesTypeName},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDishesTypeById" parameterType="Long">
+        delete from dishes_type where id = #{id}
+    </delete>
+
+    <delete id="deleteDishesTypeByIds" parameterType="String">
+        delete from dishes_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

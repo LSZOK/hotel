@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ClientMapper">
+    
+    <resultMap type="Client" id="ClientResult">
+        <result property="clientId"    column="client_id"    />
+        <result property="clientName"    column="client_name"    />
+        <result property="openId"    column="open_id"    />
+        <result property="sex"    column="sex"    />
+        <result property="phone"    column="phone"    />
+        <result property="roomNum"    column="room_num"    />
+        <result property="totalCost"    column="total_cost"    />
+        <result property="menberLevel"    column="menber_level"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectClientVo">
+        select client_id, client_name, sex, phone, room_num, total_cost, menber_level, id_card, add_time,open_id from client
+    </sql>
+
+    <sql id="selectHotelOrderVo">
+        select o.order_id, o.client_id, o.room_code, o.room_num, o.room_type, o.status, o.price, o.other_cost, o.bed_type, o.live_time, o.out_time, o.add_time,
+        c.client_id,c.client_name,c.sex,c.phone,c.room_num,c.total_cost,c.menber_level,c.open_id
+        from client c
+
+        left join hotel_order o  on o.client_id=c.client_id
+
+    </sql>
+
+    <sql id="selectOrderList">
+        select client_id, client_name, sex, phone, room_num, total_cost, menber_level, id_card, add_time,open_id from client
+    </sql>
+
+    <select id="selectClientList" parameterType="Client" resultMap="ClientResult">
+        <include refid="selectClientVo"/>
+        <where>  
+            <if test="clientName != null  and clientName != ''"> and client_name like concat('%', #{clientName}, '%')</if>
+            <if test="openId != null  and openId != ''"> and open_id= #{openId}</if>
+            <if test="clientId != null  and clientId != ''"> and client_id= #{clientId}</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="roomNum != null "> and room_num = #{roomNum}</if>
+            <if test="totalCost != null "> and total_cost = #{totalCost}</if>
+            <if test="menberLevel != null "> and menber_level = #{menberLevel}</if>
+            <if test="idCard != null  and idCard != ''"> and id_card = #{idCard}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectClientById" parameterType="String" resultMap="ClientResult">
+        <include refid="selectClientVo"/>
+        where client_id = #{clientId}
+    </select>
+        
+    <insert id="insertClient" parameterType="Client">
+        insert into client
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="clientId != null">client_id,</if>
+            <if test="clientName != null">client_name,</if>
+            <if test="openId != null">open_id,</if>
+            <if test="sex != null">sex,</if>
+            <if test="phone != null">phone,</if>
+            <if test="roomNum != null">room_num,</if>
+            <if test="totalCost != null">total_cost,</if>
+            <if test="menberLevel != null">menber_level,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="clientId != null">#{clientId},</if>
+            <if test="clientName != null">#{clientName},</if>
+            <if test="openId != null">#{openId},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="roomNum != null">#{roomNum},</if>
+            <if test="totalCost != null">#{totalCost},</if>
+            <if test="menberLevel != null">#{menberLevel},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClient" parameterType="Client">
+        update client
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientName != null">client_name = #{clientName},</if>
+            <if test="openId != null">open_id = #{openId},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="roomNum != null">room_num = #{roomNum},</if>
+            <if test="totalCost != null">total_cost = #{totalCost},</if>
+            <if test="menberLevel != null">menber_level = #{menberLevel},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where client_id = #{clientId}
+    </update>
+
+    <delete id="deleteClientById" parameterType="String">
+        delete from client where client_id = #{clientId}
+    </delete>
+
+    <delete id="deleteClientByIds" parameterType="String">
+        delete from client where client_id in 
+        <foreach item="clientId" collection="array" open="(" separator="," close=")">
+            #{clientId}
+        </foreach>
+    </delete>
+    
+</mapper>

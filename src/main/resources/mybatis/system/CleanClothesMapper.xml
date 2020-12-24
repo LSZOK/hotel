@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.CleanClothesMapper">
+    
+    <resultMap type="CleanClothes" id="CleanClothesResult">
+        <result property="cleanClothesId"    column="clean_clothes_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="roomCode"    column="room_code"    />
+        <result property="roomNum"    column="room_num"    />
+        <result property="user"    column="user"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="bookTakeClothesTime"    column="book_take_clothes_time"    />
+        <result property="cleanCost"    column="clean_cost"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectCleanClothesVo">
+        select clean_clothes_id, order_id,remark, room_code, room_num, user, status, clean_cost, add_time,book_take_clothes_time from clean_clothes
+    </sql>
+
+    <select id="selectCleanClothesList" parameterType="CleanClothes" resultMap="CleanClothesResult">
+        <include refid="selectCleanClothesVo"/>
+        <where>  
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="roomCode != null  and roomCode != ''"> and room_code = #{roomCode}</if>
+            <if test="roomNum != null "> and room_num = #{roomNum}</if>
+            <if test="user != null  and user != ''"> and user = #{user}</if>
+            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="bookTakeClothesTime != null  and bookTakeClothesTime != ''"> and book_take_clothes_time = #{bookTakeClothesTime}</if>
+            <if test="cleanCost != null "> and clean_cost = #{cleanCost}</if>
+            <if test="addTime != null  and addTime != ''"> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectCleanClothesById" parameterType="String" resultMap="CleanClothesResult">
+        <include refid="selectCleanClothesVo"/>
+        where clean_clothes_id = #{cleanClothesId}
+    </select>
+        
+    <insert id="insertCleanClothes" parameterType="CleanClothes">
+        insert into clean_clothes
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cleanClothesId != null">clean_clothes_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="roomCode != null">room_code,</if>
+            <if test="roomNum != null">room_num,</if>
+            <if test="user != null">user,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+            <if test="cleanCost != null">clean_cost,</if>
+            <if test="bookTakeClothesTime != null">book_take_clothes_time,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cleanClothesId != null">#{cleanClothesId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="roomCode != null">#{roomCode},</if>
+            <if test="roomNum != null">#{roomNum},</if>
+            <if test="user != null">#{user},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="cleanCost != null">#{cleanCost},</if>
+            <if test="bookTakeClothesTime != null">#{bookTakeClothesTime},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCleanClothes" parameterType="CleanClothes">
+        update clean_clothes
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="roomCode != null">room_code = #{roomCode},</if>
+            <if test="roomNum != null">room_num = #{roomNum},</if>
+            <if test="user != null">user = #{user},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="cleanCost != null">clean_cost = #{cleanCost},</if>
+            <if test="bookTakeClothesTime != null">book_take_clothes_time = #{bookTakeClothesTime},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where clean_clothes_id = #{cleanClothesId}
+    </update>
+
+    <delete id="deleteCleanClothesById" parameterType="String">
+        delete from clean_clothes where clean_clothes_id = #{cleanClothesId}
+    </delete>
+
+    <delete id="deleteCleanClothesByIds" parameterType="String">
+        delete from clean_clothes where clean_clothes_id in 
+        <foreach item="cleanClothesId" collection="array" open="(" separator="," close=")">
+            #{cleanClothesId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.HotelOutMapper">
+    
+    <resultMap type="HotelOut" id="HotelOutResult">
+        <result property="outId"    column="out_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="roomCode"    column="room_code"    />
+        <result property="roomNum"    column="room_num"    />
+        <result property="clientId"    column="client_id"    />
+        <result property="price"    column="price"    />
+        <result property="otherCost"    column="other_cost"    />
+        <result property="liveTime"    column="live_time"    />
+        <result property="userName"    column="user_name"    />
+        <result property="actualOutTime"    column="actual_out_time"    />
+        <result property="roomCost"    column="room_cost"    />
+        <result property="totalCost"    column="total_cost"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="operator"    column="operator"    />
+    </resultMap>
+
+    <sql id="selectHotelOutVo">
+        select out_id, order_id, room_code, room_num, client_id, price, other_cost, live_time, user_name, actual_out_time, room_cost, total_cost, add_time, operator from hotel_out
+    </sql>
+
+    <select id="selectHotelOutList" parameterType="HotelOut" resultMap="HotelOutResult">
+        <include refid="selectHotelOutVo"/>
+        <where>  
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="roomCode != null  and roomCode != ''"> and room_code = #{roomCode}</if>
+            <if test="roomNum != null "> and room_num = #{roomNum}</if>
+            <if test="clientId != null  and clientId != ''"> and client_id = #{clientId}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="otherCost != null "> and other_cost = #{otherCost}</if>
+            <if test="liveTime != null  and liveTime != ''"> and live_time = #{liveTime}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="actualOutTime != null  and actualOutTime != ''"> and actual_out_time = #{actualOutTime}</if>
+            <if test="roomCost != null "> and room_cost = #{roomCost}</if>
+            <if test="totalCost != null "> and total_cost = #{totalCost}</if>
+            <if test="addTime != null  and addTime != ''"> and add_time = #{addTime}</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+        </where>
+    </select>
+    
+    <select id="selectHotelOutById" parameterType="String" resultMap="HotelOutResult">
+        <include refid="selectHotelOutVo"/>
+        where out_id = #{outId}
+    </select>
+        
+    <insert id="insertHotelOut" parameterType="HotelOut">
+        insert into hotel_out
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="outId != null">out_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="roomCode != null">room_code,</if>
+            <if test="roomNum != null">room_num,</if>
+            <if test="clientId != null">client_id,</if>
+            <if test="price != null">price,</if>
+            <if test="otherCost != null">other_cost,</if>
+            <if test="liveTime != null">live_time,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="actualOutTime != null">actual_out_time,</if>
+            <if test="roomCost != null">room_cost,</if>
+            <if test="totalCost != null">total_cost,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="operator != null">operator,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="outId != null">#{outId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="roomCode != null">#{roomCode},</if>
+            <if test="roomNum != null">#{roomNum},</if>
+            <if test="clientId != null">#{clientId},</if>
+            <if test="price != null">#{price},</if>
+            <if test="otherCost != null">#{otherCost},</if>
+            <if test="liveTime != null">#{liveTime},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="actualOutTime != null">#{actualOutTime},</if>
+            <if test="roomCost != null">#{roomCost},</if>
+            <if test="totalCost != null">#{totalCost},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="operator != null">#{operator},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHotelOut" parameterType="HotelOut">
+        update hotel_out
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="roomCode != null">room_code = #{roomCode},</if>
+            <if test="roomNum != null">room_num = #{roomNum},</if>
+            <if test="clientId != null">client_id = #{clientId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="otherCost != null">other_cost = #{otherCost},</if>
+            <if test="liveTime != null">live_time = #{liveTime},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="actualOutTime != null">actual_out_time = #{actualOutTime},</if>
+            <if test="roomCost != null">room_cost = #{roomCost},</if>
+            <if test="totalCost != null">total_cost = #{totalCost},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="operator != null">operator = #{operator},</if>
+        </trim>
+        where out_id = #{outId}
+    </update>
+
+    <delete id="deleteHotelOutById" parameterType="String">
+        delete from hotel_out where out_id = #{outId}
+    </delete>
+
+    <delete id="deleteHotelOutByIds" parameterType="String">
+        delete from hotel_out where out_id in 
+        <foreach item="outId" collection="array" open="(" separator="," close=")">
+            #{outId}
+        </foreach>
+    </delete>
+    
+</mapper>
